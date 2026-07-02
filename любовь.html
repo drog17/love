@@ -1,0 +1,432 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ты любишь меня?</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: radial-gradient(circle at top, #ffdeea 0%, #ff8cb5 42%, #9f2762 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+        }
+
+        .page {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            padding: 48px 30px 32px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 0;
+            box-shadow: inset 0 0 120px rgba(255, 255, 255, 0.08), 0 28px 90px rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(20px);
+            text-align: center;
+            overflow: hidden;
+            transition: opacity 260ms ease, transform 260ms ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: -52%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 46%);
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+
+        h1 {
+            position: relative;
+            margin-bottom: 18px;
+            font-size: clamp(2.1rem, 4vw, 4rem);
+            line-height: 1.02;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 24px rgba(255, 174, 195, 0.45);
+        }
+
+        p {
+            position: relative;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1rem;
+            letter-spacing: 0.04em;
+            line-height: 1.7;
+        }
+
+        .button-row {
+            position: relative;
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            position: relative;
+            min-width: 150px;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 180ms ease, box-shadow 180ms ease, background 280ms ease, filter 280ms ease;
+            box-shadow: 0 18px 45px rgba(255, 105, 180, 0.18);
+            touch-action: manipulation;
+        }
+
+        button:focus-visible {
+            outline: 3px solid rgba(255, 255, 255, 0.8);
+            outline-offset: 4px;
+        }
+
+        .yes {
+            background: linear-gradient(135deg, #fff6fb 0%, #ff6b9f 100%);
+            color: #5b113f;
+        }
+
+        .yes:hover {
+            transform: translateY(-4px) scale(1.03);
+            filter: brightness(1.04);
+        }
+
+        .no {
+            background: rgba(255, 255, 255, 0.22);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+        }
+
+        .no:hover {
+            transform: translateY(-4px) scale(1.03);
+        }
+
+        .hero-heart {
+            position: absolute;
+            left: 50%;
+            top: 320px;
+            width: 160px;
+            height: 160px;
+            transform: translateX(-50%) rotate(-45deg);
+            background: radial-gradient(circle at 40% 40%, #fff0f4 0%, #ff5a97 45%, #ff2f73 100%);
+            border-radius: 50% 50% 0 0;
+            box-shadow: 0 0 72px rgba(255, 81, 160, 0.5);
+            z-index: 1;
+            animation: beat 1.4s ease-in-out infinite;
+        }
+
+        .hero-heart::before,
+        .hero-heart::after {
+            content: '';
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle at 45% 45%, #ffe6ef, #ff7cb4 20%, #ff3c84 100%);
+            border-radius: 50%;
+        }
+
+        .hero-heart::before {
+            top: -80px;
+            left: 0;
+        }
+
+        .hero-heart::after {
+            left: 80px;
+            top: 0;
+        }
+
+        .heart-scene {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at 10% 10%, rgba(255, 242, 250, 0.75), transparent 36%),
+                        radial-gradient(circle at 90% 16%, rgba(255, 200, 222, 0.35), transparent 22%),
+                        radial-gradient(circle at 10% 92%, rgba(255, 143, 183, 0.18), transparent 28%),
+                        linear-gradient(180deg, #ffdae5 0%, #ff8ab5 42%, #a72963 100%);
+            display: none;
+        }
+
+        .heart-scene.active {
+            display: block;
+        }
+
+        .heart-scene .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            transform: rotate(-45deg);
+            background: linear-gradient(135deg, #ff9bd1 0%, #ff3f85 100%);
+            border-radius: 50% 50% 0 0;
+            opacity: 0.95;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .heart-scene .heart::before,
+        .heart-scene .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #ff9bd1 0%, #ff3f85 100%);
+            border-radius: 50%;
+        }
+
+        .heart-scene .heart::before {
+            top: -10px;
+            left: 0;
+        }
+
+        .heart-scene .heart::after {
+            left: 10px;
+            top: 0;
+        }
+
+        .heart-scene .message {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            text-align: center;
+            font-size: 16px;
+            text-shadow: 0 0 35px rgba(255, 255, 255, 0.4);
+            max-width: 88vw;
+            letter-spacing: 0.04em;
+            opacity: 0;
+            animation: fadeInText 1.8s ease 0.5s forwards;
+        }
+
+        .floating-heart {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            transform: rotate(-45deg);
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 50% 50% 0 0;
+            filter: blur(0.2px);
+            animation: tinyFloat 8s linear infinite;
+        }
+
+        @media (max-width: 720px) {
+            .card {
+                padding: 30px 20px 26px;
+            }
+
+            .hero-heart {
+                width: 130px;
+                height: 130px;
+                top: 16px;
+            }
+
+            .hero-heart::before,
+            .hero-heart::after {
+                width: 130px;
+                height: 130px;
+            }
+
+            .button-row {
+                gap: 14px;
+            }
+
+            button {
+                min-width: 130px;
+                padding: 14px 20px;
+                font-size: 0.98rem;
+            }
+
+            p {
+                font-size: 0.96rem;
+                line-height: 1.6;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .card {
+                padding: 26px 16px 24px;
+            }
+
+            h1 {
+                font-size: clamp(1.9rem, 8vw, 2.8rem);
+            }
+
+            .hero-heart {
+                width: 110px;
+                height: 110px;
+                top: 12px;
+            }
+
+            .hero-heart::before,
+            .hero-heart::after {
+                width: 110px;
+                height: 110px;
+            }
+
+            .button-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            button {
+                width: 100%;
+                min-width: auto;
+                padding: 16px 20px;
+            }
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: translateX(-50%) rotate(-45deg) scale(1); }
+            50% { transform: translateX(-50%) rotate(-45deg) scale(1.08); }
+        }
+
+        @keyframes float {
+            0% { transform: translate(var(--xStart, 0), var(--yStart, 0)) rotate(-45deg) scale(var(--scale,1)); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(calc(var(--xStart, 0) + var(--xMove, 0)), calc(var(--yStart, 0) - var(--yMove, 0))) rotate(-45deg) scale(var(--scale,1)); opacity: 0; }
+        }
+
+        @keyframes fadeInText {
+            from { opacity: 0; transform: translate(-50%, -46%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        @keyframes tinyFloat {
+            0% { transform: translate(0, 0) rotate(-45deg) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translate(var(--dx, 0), var(--dy, 0)) rotate(-45deg) scale(1.2); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="card" id="questionCard">
+            <div class="hero-heart"></div>
+            <h1>Ты любишь меня?</h1>
+            <p>Выбери ответ. Кнопка «нет» любит убегать — постарайся её поймать!</p>
+            <div class="button-row">
+                <button class="yes" id="yesBtn">да, конечно!</button>
+                <button class="no" id="noBtn">нет</button>
+            </div>
+        </div>
+
+        <div class="heart-scene" id="heartScene"></div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const questionCard = document.getElementById('questionCard');
+        const heartScene = document.getElementById('heartScene');
+
+        function moveNoButton() {
+            const padding = 12;
+            const btnRect = noBtn.getBoundingClientRect();
+            const maxX = Math.max(window.innerWidth - btnRect.width - padding, padding);
+            const maxY = Math.max(window.innerHeight - btnRect.height - padding, padding);
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+            noBtn.style.zIndex = 10;
+        }
+
+        noBtn.addEventListener('pointerenter', moveNoButton);
+        noBtn.addEventListener('click', event => event.preventDefault());
+
+        yesBtn.addEventListener('click', () => {
+            questionCard.style.opacity = '0';
+            questionCard.style.transform = 'translate(-50%, -50%) scale(0.95)';
+            questionCard.style.pointerEvents = 'none';
+            setTimeout(() => {
+                questionCard.style.display = 'none';
+                showHeartScene();
+            }, 260);
+        });
+
+        function showHeartScene() {
+            heartScene.classList.add('active');
+            createHearts(60);
+            createFloatingHearts(24);
+            const message = document.createElement('div');
+            message.className = 'message';
+            message.textContent =   `Я люблю тебя сильнее и со всем сердцем! Ты — моя радость и моя любовь.
+Ты делаешь мою жизнь ярче и счастливее.Ты — моя половинка, моя душа и мое счастье. Я люблю тебя больше, чем слова могут выразить, и хочу провести с тобой всю жизнь!`;
+            heartScene.appendChild(message);
+        }
+
+        function createHearts(count) {
+            for (let i = 0; i < count; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                const size = Math.random() * 20 + 16;
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 120 + 20;
+                const xMove = (Math.random() - 0.5) * 180;
+                const yMove = Math.random() * 240 + 240;
+                const duration = Math.random() * 4 + 5;
+                const delay = Math.random() * 1.5;
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+                heart.style.setProperty('--scale', (size / 22).toFixed(2));
+                heart.style.setProperty('--xStart', `${startX}vw`);
+                heart.style.setProperty('--yStart', `${startY}vh`);
+                heart.style.setProperty('--xMove', `${xMove}vw`);
+                heart.style.setProperty('--yMove', `${yMove}vh`);
+                heart.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                heart.style.left = '0';
+                heart.style.top = '0';
+                heart.style.opacity = 0;
+                heartScene.appendChild(heart);
+            }
+        }
+
+        function createFloatingHearts(count) {
+            for (let i = 0; i < count; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'floating-heart';
+                const dx = (Math.random() - 0.5) * 300;
+                const dy = -1 * (Math.random() * 320 + 180);
+                const delay = Math.random() * 5;
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                dot.style.left = `${x}px`;
+                dot.style.top = `${y}px`;
+                dot.style.setProperty('--dx', `${dx}px`);
+                dot.style.setProperty('--dy', `${dy}px`);
+                dot.style.animationDelay = `${delay}s`;
+                heartScene.appendChild(dot);
+            }
+        }
+    </script>
+</body>
+</html>
